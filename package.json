@@ -1,0 +1,37 @@
+{
+  "name": "academic-tools",
+  "version": "1.0.0",
+  "description": "Academic document reviewer and file organizer tools",
+  "main": "cli.js",
+  "bin": {
+    "file-organizer": "./cli.js",
+    "academic-reviewer": "./review-cli.js"
+  },
+  "scripts": {
+    "start": "node cli.js help",
+    "review": "node review-cli.js",
+    "review:example": "node examples/example-review.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "cli",
+    "file-organizer",
+    "file-management",
+    "productivity",
+    "academic",
+    "abnt",
+    "reviewer",
+    "document-analysis"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "cheerio": "^1.1.2",
+    "commander": "^14.0.2",
+    "fs": "^0.0.1-security",
+    "fs-extra": "^11.3.2",
+    "iconv-lite": "^0.7.0",
+    "inquirer": "^8.2.6"
+  }
+}

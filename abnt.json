@@ -1,0 +1,60 @@
+{
+    "GERAL":{
+        "TAMANHO_TEXTO": 12,
+        "FONTES": ["Arial", "Times New Roman"],
+        "ITALICOS": ["apud.", "ibid.", "id.", "op.", "cit.", "passim", "In", "loc.", "cit.", "Cf.", "seq.", "et al."],
+        "ESPACAMENTO_ANTES": 0,
+        "ESPACAMENTO_DEPOIS": 0,
+        "PT_PARA_CM": 0.0352778,
+        "PC_PARA_CM": 0.01,
+        "ESPACAMENTOS": ["1", "1.5", "2"]
+    },
+    "DESENVOLVIMENTO":{
+        "ESPACAMENTO": 150,
+        "RECUO": 35.4,
+        "ALINHAMENTO_CORRETO": "justify",
+        "TIPOS_ALINHAMENTO": ["left", "right", "justify", "center"],
+        "CITACAO_SEM_ENTRADA": "S[X], Ano",
+        "CITACAO_COM_ENTRADA": "Ano",
+        "CITACAO_APUD": "S[X1], Ano1 apud S[X2] Ano 2",
+        "CITACAO_CARACTERES": ["[...]", "[ ]"],
+        "CITACAO_ESTILOS": ["italic", "bold", "underlined"],
+        "CITACAO_DIRETA_LONGA":{
+            "PAGINA":"p.",
+            "RECUO": 4,
+            "ESPACAMENTO": 0,
+            "LINHAS_MINIMAS": 4,
+            "TAMANHO_TEXTO": 10,
+            "ALINHAMENTO": "left" 
+        },
+        "FIGURAS":{
+             "TAMANHO_TEXTO": 10,
+             "ESPACAMENTO": 0,
+             "ALINHAMENTO": "center",
+             "LEGENDA": "Figura X - Legenda",
+             "FONTE": "Fonte: ",
+             "TIPOS": ["Figura", "Tabela", "Quadro"]
+        }
+    },
+    "REFERENCIAS":{
+        "PORCENTAGEM_ARTIGOS": 30,
+        "PORCENTAGEM_SITES": 20,
+        "ESPACAMENTO": 0,
+        "ALINHAMENTO": "left",
+        "ESPACO_BRANCO": true,
+        "ESPACO_BRANCO_FORMATO": "&nbsp",
+        "TIPO_ORGS": ["org.", "orgs.", "ed.", "eds."],
+        "MONOGRAFIA_PADRAO": "S[X], N[X]. T: St. Nº. ed. Local: Editora",
+        "MONOGRAFIA_ORGANIZADOR": "S[X], N[X] (org). T: St. Nº. ed. Local: Editora",
+        "MONOGRAFIA_COMPLEMENTAR": "S[X], N[X]. T: St. Nº. ed. Local: Editora, Ano, p., x cm. (tipo, v.). Bibliografia: p. a-b. ISBN",
+        "PERIODICOS": "S[X], N[X]. T: St. Ed, L, v.a, n.b, p. n1-n2, D, Disp. Acesso",
+        "MESES_ABREVIADOS": ["jan.", "fev.", "mar.", "abr.", "mai.", "jun.", "jul.", "ago.", "set.", "out.", "nov.", "dez."],
+        "MESES": ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"],
+        "TIPOS": ["monografia", "periodico", "site"],
+        "TIPOS_SITE": ["site", "blog", "wiki", "fórum", "fórum", "fórum", "fórum", "fórum", "fórum"],
+        "TIPOS_PERIODICO": ["revista", "jornal", "revista", "jornal", "revista", "jornal", "revista", "jornal", "revista"],
+        "TIPOS_MONOGRAFIA": ["livro"],
+        "TIPOS_MONOGRAFIA_COMPLEMENTAR": ["tese", "dissertação"],
+        "TIPOS_MONOGRAFIA_ORGANIZADOR": ["coletânea", "antologia"]
+    }
+}
