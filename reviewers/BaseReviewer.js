@@ -73,6 +73,15 @@ class BaseReviewer {
     throw new Error('Method validateContent() must be implemented by subclass');
   }
 
+  matchCitationToReference(citation, references) {
+    const { author, year } = citation;
+
+    return references.find(ref => {
+      const text = ref.text.toUpperCase();
+      return text.includes(author.toUpperCase()) && text.includes(year);
+    });
+  }
+
   generateReport() {
     return {
       documentType: this.constructor.name.replace('Reviewer', ''),
@@ -125,6 +134,9 @@ class BaseReviewer {
     
     return report;
   }
+
+  
 }
+
 
 module.exports = BaseReviewer;

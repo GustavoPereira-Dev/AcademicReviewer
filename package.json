@@ -26,12 +26,22 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@citation-js/core": "^0.7.18",
+    "@citation-js/plugin-bibtex": "^0.7.18",
+    "@citation-js/plugin-csl": "^0.7.18",
+    "@citation-js/plugin-doi": "^0.7.18",
     "chalk": "^4.1.2",
     "cheerio": "^1.1.2",
+    "cmpstr": "^3.0.3",
     "commander": "^14.0.2",
+    "express": "^5.1.0",
     "fs": "^0.0.1-security",
     "fs-extra": "^11.3.2",
     "iconv-lite": "^0.7.0",
-    "inquirer": "^8.2.6"
+    "inquirer": "^8.2.6",
+    "multer": "^2.0.2"
+  },
+  "devDependencies": {
+    "axios": "^1.12.2"
   }
 }

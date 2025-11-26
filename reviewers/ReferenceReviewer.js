@@ -23,8 +23,9 @@ class ReferenceReviewer {
     
     const results = [];
     let validatedCount = 0;
+
     
-    for (let i = 0; i < Math.min(this.references.length, 5); i++) {
+    for (let i = 0; i < this.references.length; i++) {
       const ref = this.references[i];
       
       try {
@@ -33,12 +34,15 @@ class ReferenceReviewer {
         const refParsed = this.parseReference(ref.text);
         
         if (refParsed) {
+          
+          
           const resultado = await verificaReferenciaCompleta(
             ref.text,
             refParsed,
             this.serpApiKey,
             this.scrapingDogKey
           );
+
           
           results.push({
             originalText: ref.text,
@@ -51,6 +55,9 @@ class ReferenceReviewer {
           if (resultado.success) {
             validatedCount++;
           }
+          
+        } else{
+          console.log("Má formatação da referência")
         }
       } catch (error) {
         console.error(`    Erro ao verificar referência ${i + 1}:`, error.message);

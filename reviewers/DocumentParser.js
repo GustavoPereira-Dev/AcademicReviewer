@@ -1,4 +1,4 @@
-const parserLib = require('../lib/documentParserLib');
+const parserLib = require("../lib/documentParserLib");
 
 class DocumentParser {
   constructor(filePath) {
@@ -14,7 +14,8 @@ class DocumentParser {
       tables: [],
       references: [],
       citations: [],
-      metadata: {}
+      spans: [],
+      metadata: {},
     };
   }
 
@@ -38,22 +39,22 @@ class DocumentParser {
 
   extractStyles(elem) {
     return {
-      fontSize: this.getResolvedStyle(elem, 'font-size') || null,
-      lineHeight: this.getResolvedStyle(elem, 'line-height') || null,
-      fontFamily: this.getResolvedStyle(elem, 'font-family') || null,
-      textAlign: this.getResolvedStyle(elem, 'text-align') || null,
-      textIndent: this.getResolvedStyle(elem, 'text-indent') || null,
-      marginTop: this.getResolvedStyle(elem, 'margin-top') || null,
-      marginBottom: this.getResolvedStyle(elem, 'margin-bottom') || null,
-      marginLeft: this.getResolvedStyle(elem, 'margin-left') || null
+      fontSize: this.getResolvedStyle(elem, "font-size") || null,
+      lineHeight: this.getResolvedStyle(elem, "line-height") || null,
+      fontFamily: this.getResolvedStyle(elem, "font-family") || null,
+      textAlign: this.getResolvedStyle(elem, "text-align") || null,
+      textIndent: this.getResolvedStyle(elem, "text-indent") || null,
+      marginTop: this.getResolvedStyle(elem, "margin-top") || null,
+      marginBottom: this.getResolvedStyle(elem, "margin-bottom") || null,
+      marginLeft: this.getResolvedStyle(elem, "margin-left") || null,
     };
   }
 
   parseDocument() {
     this.loadDocument();
-    
+
     let sectionIndex = 1;
-    
+
     while (true) {
       const sectionSelector = `div.WordSection${sectionIndex}`;
       const sectionElem = this.$(sectionSelector);
@@ -62,22 +63,25 @@ class DocumentParser {
 
       const sectionData = {
         index: sectionIndex,
-        elements: []
+        elements: [],
       };
 
       sectionElem.children().each((j, elem) => {
         const tag = elem.tagName.toLowerCase();
         const $elem = this.$(elem);
-        const className = $elem.attr('class') || '';
+        const className = $elem.attr("class") || "";
         const text = this.extractText($elem);
         const styles = this.extractStyles($elem);
+
+        // console.log("Element Childrens: ")
+        // elem.children.map((h) => console.log("A Tagname " + h.tagName + " Text " + this.extractText(this.$(h))))
 
         const elementData = {
           tag,
           className,
           text,
           styles,
-          type: this.classifyElement(tag, className, text)
+          type: this.classifyElement(tag, className, text),
         };
 
         sectionData.elements.push(elementData);
@@ -87,26 +91,32 @@ class DocumentParser {
             level: parseInt(tag[1]),
             text,
             styles,
-            section: sectionIndex
+            section: sectionIndex,
           });
-        } else if (tag === 'p' && className.includes('MsoNormal')) {
+        } else if (tag === "p" && className.includes("MsoNormal")) {
           this.documentData.paragraphs.push({
             text,
             styles,
             section: sectionIndex,
-            className
+            className,
           });
-        } else if (tag === 'p' && /MsoListParagraph/.test(className)) {
+        } else if (tag === "p" && /MsoListParagraph/.test(className)) {
           this.documentData.lists.push({
             text,
             styles,
-            section: sectionIndex
+            section: sectionIndex,
           });
-        } else if (tag === 'p' && className.includes('MsoCaption')) {
+        } else if (tag === "p" && className.includes("MsoCaption")) {
           this.documentData.figures.push({
             caption: text,
             styles,
-            section: sectionIndex
+            section: sectionIndex,
+          });
+        } else if (tag === "span" && className.includes("MsoCaption")) {
+          this.documentData.figures.push({
+            caption: text,
+            styles,
+            section: sectionIndex,
           });
         }
       });
@@ -117,60 +127,96 @@ class DocumentParser {
 
     this.extractReferences();
     this.extractCitations();
-    
+
     return this.documentData;
   }
 
   classifyElement(tag, className, text) {
-    if (/^h[1-6]$/.test(tag)) return 'heading';
-    if (className.includes('MsoCaption')) return 'caption';
-    if (className.includes('MsoListParagraph')) return 'list';
-    if (className.includes('MsoNormal')) return 'paragraph';
-    if (className.includes('MsoToc') || className.includes('MsoTof')) return 'toc';
-    return 'unknown';
+    if (/^h[1-6]$/.test(tag)) return "heading";
+    if (className.includes("MsoCaption")) return "caption";
+    if (className.includes("MsoListParagraph")) return "list";
+    if (className.includes("MsoNormal")) return "paragraph";
+    if (className.includes("MsoToc") || className.includes("MsoTof"))
+      return "toc";
+    return "unknown";
   }
 
   extractReferences() {
-    const referencias = this.$('p.MsoNormal b').filter((i, el) => {
+    const referencias = this.$("h1 a").filter((i, el) => {
       const texto = this.$(el).text().toUpperCase();
-      return texto.includes('REFERÊNCIAS') || texto.includes('REFERENCIAS');
+      return texto.includes("REFERÊNCIAS") || texto.includes("REFERENCIAS");
     });
 
+    let referencia = "";
+
+    //console.log("Referências encontradas:")
     if (referencias.length > 0) {
       let refNode = referencias.first().parent();
 
       while (refNode.next().length > 0) {
+
+
         const prox = refNode.next();
-        if (!prox.hasClass('MsoNormal')) break;
+        if (!prox.hasClass("MsoNormal")) break;
         const txt = this.extractText(prox);
         const styles = this.extractStyles(prox);
-        
-        if (txt.trim()) {
-          this.documentData.references.push({
-            text: txt,
-            styles
-          });
-        }
+
         refNode = prox;
+
+        if (txt.trim().length === 0 || refNode.next().length === 0) {
+          if (refNode.next().length === 0) referencia = txt;
+
+          //console.log(`${referencia}`)
+          this.documentData.references.push({
+            text: referencia,
+            styles,
+          });
+
+          referencia = "";
+        } else {
+          referencia += txt;
+        }
       }
     }
   }
 
   extractCitations() {
-    const citationRegex = /\(([A-Z][A-ZÀ-Ú\s]+,\s*\d{4}[a-z]?(?:;\s*[A-Z][A-ZÀ-Ú\s]+,\s*\d{4}[a-z]?)*)\)/g;
-    
+    const citationParenRegex =
+      /\(\s*((?:[A-ZÀ-Ú][A-Za-zÀ-ú.'-]+(?:\s+[A-ZÀ-Ú][A-Za-zÀ-ú.'-]+)*(?:\s*(?:e|and|&)\s*[A-ZÀ-Ú][A-Za-zÀ-ú.'-]+(?:\s+[A-ZÀ-Ú][A-Za-zÀ-ú.'-]+)*)*)(?:,\s*)\d{4}[a-z]?)\s*\)/g;
+
+    const citationInlineRegex =
+      /\b([A-ZÀ-Ú][A-Za-zÀ-ú.'-]+(?:\s+[A-ZÀ-Ú][A-Za-zÀ-ú.'-]+)*(?:\s*(?:e|and|&)\s*[A-ZÀ-Ú][A-Za-zÀ-ú.'-]+(?:\s+[A-ZÀ-Ú][A-Za-zÀ-ú.'-]+)*)*)\s*\(\s*\d{4}[a-z]?\s*\)/g;
+
+    //console.log("Citações encontradas:")
     this.documentData.paragraphs.forEach((para, idx) => {
-      const matches = [...para.text.matchAll(citationRegex)];
-      matches.forEach(match => {
+      if (!para?.text) return;
+
+      const text = para.text;
+
+      const matches = [
+        ...text.matchAll(citationParenRegex),
+        ...text.matchAll(citationInlineRegex)
+      ];
+
+      
+      if (matches.length === 0) return;
+
+      matches.forEach((match) => {
+        const fullCitation = match[0];
+        const content = match[1];
+       // console.log(`${fullCitation}`)
         this.documentData.citations.push({
-          full: match[0],
-          content: match[1],
+          full: fullCitation,
+          content,
           paragraphIndex: idx,
-          text: match.input
+          text
         });
       });
     });
   }
+
+
+
 
   getData() {
     return this.documentData;
